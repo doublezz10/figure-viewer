@@ -4,7 +4,7 @@ const { Command } = require('commander');
 const fs = require('fs');
 const path = require('path');
 
-const { discoverFiguresDirectory, discoverFiguresInSubdirs, getErrorMessage } = require('./lib/discover');
+const { discoverFiguresDirectory, discoverFiguresInSubdirs, getErrorMessage, saveLastUsed, getLastUsed } = require('./lib/discover');
 const { generateHtml, getImages } = require('./lib/html');
 const { updateHistory, getHistoryForDir, clearHistory: clearHistoryFn } = require('./lib/history');
 const { createWatcher, closeWatcher } = require('./lib/watcher');
@@ -125,7 +125,8 @@ async function main() {
   // If not found and searchSubdirs enabled (CLI or config), search subdirectories
   const useSubdirs = options.subdirs !== undefined ? options.subdirs : config.searchSubdirs;
   if (!figuresDir && useSubdirs) {
-    const subdirs = discoverFiguresInSubdirs();
+    const parentDir = process.cwd();
+    const subdirs = discoverFiguresInSubdirs(parentDir);
     if (subdirs.length === 0) {
       console.error(getErrorMessage(['outputs/figures', 'figures', 'plots']));
       process.exit(1);
@@ -135,18 +136,37 @@ async function main() {
       figuresDir = subdirs[0].dir;
       console.log(`Found figures in subdirectory: ${subdirs[0].parent}/${subdirs[0].figureDir}`);
     } else {
-      console.log('Found multiple figures directories:\n');
-      subdirs.forEach((s, i) => {
-        console.log(`  ${i + 1}. ${s.parent}/${s.figureDir}`);
-      });
-      console.log('\nUse -p to specify one explicitly.');
-      process.exit(1);
+      // Check for last used selection
+      const lastUsed = getLastUsed(parentDir);
+      if (lastUsed && subdirs.find(s => s.dir === lastUsed)) {
+        const selected = subdirs.find(s => s.dir === lastUsed);
+        figuresDir = lastUsed;
+        console.log(`Using last used: ${selected.parent}/${selected.figureDir}`);
+      } else {
+        console.log('Found multiple figures directories:\n');
+        subdirs.forEach((s, i) => {
+          console.log(`  ${i + 1}. ${s.parent}/${s.figureDir}`);
+        });
+        console.log('\nUse -p to specify one explicitly, or restart to select.');
+        process.exit(1);
+      }
+    }
+    
+    // Save this selection as last used
+    if (figuresDir) {
+      saveLastUsed(parentDir, figuresDir);
     }
   }
 
   if (!figuresDir) {
     console.error(getErrorMessage(['outputs/figures', 'figures', 'plots']));
     process.exit(1);
+  }
+
+  // Save selection for future runs
+  const parentDir = process.cwd();
+  if (useSubdirs) {
+    saveLastUsed(parentDir, figuresDir);
   }
 
   console.log(`Figures directory: ${figuresDir}`);
