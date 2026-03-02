@@ -1,6 +1,6 @@
 # Figure Viewer
 
-CLI tool for viewing and navigating scientific figures in a browser pane.
+CLI tool for viewing and navigating scientific figures in a browser pane. Automatically splits a browser pane below the active OpenCode session with an HTML site to browse the generated figures.
 
 **Note:** This project is not affiliated with or endorsed by OpenCode or cmux. It simply integrates with their tools.
 
