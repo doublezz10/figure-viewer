@@ -53,6 +53,7 @@ figure-viewer --kill
 | Option | Description | Default |
 |--------|-------------|---------|
 | `-p, --path <path>` | Explicit path to figures directory | auto-discover |
+| `-s, --subdirs` | Search subdirectories for figures folders | false |
 | `-o, --output <path>` | Output HTML file path | `figure-viewer.html` |
 | `-w, --watch` | Watch for file changes | false |
 | `--no-open` | Don't open browser | false |
