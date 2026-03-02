@@ -1,6 +1,8 @@
 # Figure Viewer
 
-CLI tool for viewing and navigating scientific figures in a browser pane. Designed for macOS + cmux + OpenCode.
+CLI tool for viewing and navigating scientific figures in a browser pane.
+
+**Note:** This project is not affiliated with or endorsed by OpenCode or cmux. It simply integrates with their tools.
 
 ## Features
 
