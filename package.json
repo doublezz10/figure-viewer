@@ -1,0 +1,33 @@
+{
+  "name": "figure-viewer",
+  "version": "1.0.0",
+  "description": "CLI tool for viewing and navigating scientific figures in a browser pane",
+  "main": "figure-viewer.js",
+  "bin": {
+    "figure-viewer": "./figure-viewer.js"
+  },
+  "scripts": {
+    "start": "node figure-viewer.js"
+  },
+  "keywords": [
+    "cli",
+    "figures",
+    "viewer",
+    "cmux",
+    "plots",
+    "scientific"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14"
+  },
+  "dependencies": {
+    "chokidar": "^3.6.0",
+    "commander": "^12.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zachz/figure-viewer.git"
+  }
+}

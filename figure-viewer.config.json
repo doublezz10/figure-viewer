@@ -1,0 +1,12 @@
+{
+  "figuresDirs": [
+    "outputs/figures",
+    "figures",
+    "plots",
+    "output/figures",
+    "output/plots"
+  ],
+  "refreshInterval": 30000,
+  "watcherTimeout": 3600000,
+  "openOnStartup": true
+}
