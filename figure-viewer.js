@@ -4,7 +4,7 @@ const { Command } = require('commander');
 const fs = require('fs');
 const path = require('path');
 
-const { discoverFiguresDirectory, getErrorMessage } = require('./lib/discover');
+const { discoverFiguresDirectory, discoverFiguresInSubdirs, getErrorMessage } = require('./lib/discover');
 const { generateHtml, getImages } = require('./lib/html');
 const { updateHistory, getHistoryForDir, clearHistory: clearHistoryFn } = require('./lib/history');
 const { createWatcher, closeWatcher } = require('./lib/watcher');
@@ -19,6 +19,7 @@ program
   .description('CLI tool for viewing and navigating scientific figures in a browser pane')
   .version('1.0.0')
   .option('-p, --path <path>', 'Explicit path to figures directory')
+  .option('-s, --subdirs', 'Search subdirectories for figures folders')
   .option('-o, --output <path>', 'Output HTML file path', 'figure-viewer.html')
   .option('-w, --watch', 'Watch for file changes and auto-refresh', false)
   .option('--no-open', 'Do not open browser automatically')
@@ -120,8 +121,29 @@ async function main() {
     process.exit(1);
   }
 
+  // If not found and --subdirs option, search subdirectories
+  if (!figuresDir && options.subdirs) {
+    const subdirs = discoverFiguresInSubdirs();
+    if (subdirs.length === 0) {
+      console.error(getErrorMessage(['outputs/figures', 'figures', 'plots']));
+      process.exit(1);
+    }
+    
+    if (subdirs.length === 1) {
+      figuresDir = subdirs[0].dir;
+      console.log(`Found figures in subdirectory: ${subdirs[0].parent}/${subdirs[0].figureDir}`);
+    } else {
+      console.log('Found multiple figures directories:\n');
+      subdirs.forEach((s, i) => {
+        console.log(`  ${i + 1}. ${s.parent}/${s.figureDir}`);
+      });
+      console.log('\nUse -p to specify one explicitly.');
+      process.exit(1);
+    }
+  }
+
   if (!figuresDir) {
-    console.error(getErrorMessage(FIGURE_DIRS));
+    console.error(getErrorMessage(['outputs/figures', 'figures', 'plots']));
     process.exit(1);
   }
 
