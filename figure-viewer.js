@@ -113,6 +113,7 @@ async function main() {
   }
 
   // Discover figures directory
+  const config = getConfig();
   let figuresDir;
   try {
     figuresDir = discoverFiguresDirectory(options.path);
@@ -121,8 +122,9 @@ async function main() {
     process.exit(1);
   }
 
-  // If not found and --subdirs option, search subdirectories
-  if (!figuresDir && options.subdirs) {
+  // If not found and searchSubdirs enabled (CLI or config), search subdirectories
+  const useSubdirs = options.subdirs !== undefined ? options.subdirs : config.searchSubdirs;
+  if (!figuresDir && useSubdirs) {
     const subdirs = discoverFiguresInSubdirs();
     if (subdirs.length === 0) {
       console.error(getErrorMessage(['outputs/figures', 'figures', 'plots']));

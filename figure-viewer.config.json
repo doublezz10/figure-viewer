@@ -8,5 +8,6 @@
   ],
   "refreshInterval": 30000,
   "watcherTimeout": 3600000,
-  "openOnStartup": true
+  "openOnStartup": true,
+  "searchSubdirs": true
 }
