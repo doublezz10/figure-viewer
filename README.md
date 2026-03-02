@@ -17,6 +17,12 @@ CLI tool for viewing and navigating scientific figures in a browser pane. Automa
 - Configurable via `.figure-viewer.json`
 - Multiple independent sessions support
 
+## Screenshots
+
+![Figure Viewer UI](screenshots/whole_ui.png)
+
+![Lightbox View](screenshots/single_figure_zoom.png)
+
 ## Installation
 
 ```bash
